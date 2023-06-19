@@ -1,7 +1,7 @@
 import {
     AmbientLight,
     BoxGeometry,
-    Camera, DoubleSide,
+    Camera, Color, DoubleSide,
     Mesh,
     MeshBasicMaterial,
     MeshStandardMaterial,
@@ -18,6 +18,7 @@ const options = {
 }
 
 const scene = new Scene()
+scene.background = new Color(0x7057ff)
 
 const camera = new PerspectiveCamera(1000, options.width / options.height)
 camera.position.z = -4
@@ -62,6 +63,8 @@ renderer.setSize(options.width, options.height)
 const controls = new OrbitControls(camera, renderer.domElement)
 function animate() {
     requestAnimationFrame(animate)
+    woodSphere.rotation.y += 0.01
+    woodSphere.rotation.x += 0.01
     controls.update()
     renderer.render(scene, camera)
 }
