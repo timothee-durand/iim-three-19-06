@@ -1,20 +1,18 @@
 import {
-    AmbientLight,
-    BoxGeometry,
-    Camera, Color, DoubleSide,
+    Color,
+    Group,
     Mesh,
     MeshBasicMaterial,
     MeshStandardMaterial,
-    PerspectiveCamera, Plane, PlaneGeometry,
-    PointLight,
-    Scene, SphereGeometry, SpotLight, SpotLightHelper, TextureLoader,
+    PerspectiveCamera, PlaneGeometry,
+    Scene, SphereGeometry, SpotLight, TextureLoader,
     WebGLRenderer
 } from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 
 const options = {
-    width : 500,
-    height : 500
+    width: 500,
+    height: 500
 }
 
 const scene = new Scene()
@@ -22,8 +20,8 @@ scene.background = new Color(0x7057ff)
 
 const camera = new PerspectiveCamera(1000, options.width / options.height)
 camera.position.z = -4
-camera.position.y = -6
-camera.rotation.x = 3
+camera.position.y = -3
+camera.position.x = -1
 scene.add(camera)
 
 const canvas = document.querySelector('#renderer')
@@ -31,29 +29,32 @@ const renderer = new WebGLRenderer({canvas: canvas})
 
 const spotLight = new SpotLight(0xffffff, 2)
 scene.add(spotLight)
-spotLight.position.set(0, -3, -4)
+spotLight.position.set(0, -2, -6)
 
 
 const plane = new Mesh(
-    new PlaneGeometry(4, 4, 4),
+    new PlaneGeometry(10, 10),
     new MeshStandardMaterial({color: 0x005f00})
 )
 scene.add(plane)
-plane.position.set(0, 2, 0)
+plane.position.set(-2, 2, 2)
 plane.rotation.x = Math.PI / 2
 
 
-const woodTexture = await loadTexture('/textures/raw_plank_wall_diff_1k.jpg')
-const woodSphere = getSphere({texture : woodTexture})
-woodSphere.position.set(-1, -1, 1)
-scene.add(woodSphere)
+const sphereGroup = new Group()
+scene.add(sphereGroup)
+sphereGroup.position.set(-2, 0, 2)
 
-const redSphere = getSphere({color : 0x680000})
-redSphere.position.set(1, 0, 0)
-scene.add(redSphere)
+const woodTexture = await loadTexture('/textures/raw_plank_wall_diff_1k.jpg')
+const woodSphere = getSphere({texture: woodTexture})
+sphereGroup.add(woodSphere)
+
+const redSphere = getSphere({color: 0x680000})
+redSphere.position.set(2, 0, 0)
+sphereGroup.add(redSphere)
 
 const metalTexture = await loadTexture('/textures/metal.jpg')
-const sphere3 = getSphere({texture : metalTexture})
+const sphere3 = getSphere({texture: metalTexture})
 sphere3.position.set(0, 1, -1)
 scene.add(sphere3)
 
@@ -61,10 +62,10 @@ scene.add(sphere3)
 renderer.setSize(options.width, options.height)
 
 const controls = new OrbitControls(camera, renderer.domElement)
+
 function animate() {
     requestAnimationFrame(animate)
-    woodSphere.rotation.y += 0.01
-    woodSphere.rotation.x += 0.01
+    sphereGroup.rotation.y += 0.01
     controls.update()
     renderer.render(scene, camera)
 }
